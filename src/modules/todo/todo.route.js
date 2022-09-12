@@ -12,28 +12,14 @@ import {
 } from './todo.schema.js';
 
 const todoRoutes = async (server, options) => {
-  server.get('/', { preHandler: [server.authenticate] }, getAllTodoHandler);
-  server.get('/:id', { preHandler: [server.authenticate] }, getTodoByIdHandler);
-  server.post(
-    '/',
-    { preHandler: [server.authenticate], schema: postTodoSchema },
-    createTodoHandler
-  );
-  server.delete(
-    '/:id',
-    { preHandler: [server.authenticate] },
-    removeTodoHandler
-  );
-  server.patch(
-    '/:id',
-    { preHandler: [server.authenticate], schema: patchTodoSchema },
-    updateTodoHandler
-  );
-  server.put(
-    '/:id',
-    { preHandler: [server.authenticate], schema: putTodoSchema },
-    updateTodoHandler
-  );
+  server.addHook('onRequest', server.authenticate); // validate authentication
+
+  server.get('/', getAllTodoHandler);
+  server.get('/:id', getTodoByIdHandler);
+  server.post('/', { schema: postTodoSchema }, createTodoHandler);
+  server.delete('/:id', removeTodoHandler);
+  server.patch('/:id', { schema: patchTodoSchema }, updateTodoHandler);
+  server.put('/:id', { schema: putTodoSchema }, updateTodoHandler);
 };
 
 export { todoRoutes };

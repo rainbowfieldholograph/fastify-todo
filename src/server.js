@@ -32,7 +32,7 @@ fastifyServer.decorate('authenticate', async (request, reply) => {
   try {
     await request.jwtVerify();
   } catch (error) {
-    return reply.send(error);
+    reply.send(error);
   }
 });
 
