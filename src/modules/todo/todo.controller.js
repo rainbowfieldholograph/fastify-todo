@@ -8,7 +8,9 @@ import {
 
 const getAllTodoHandler = async (request, reply) => {
   const result = await getAllTodo();
+
   if (result.length === 0) throw new Error('No documents found');
+
   return result;
 };
 
@@ -17,11 +19,13 @@ const getTodoByIdHandler = async (request, reply) => {
   const { user } = request;
 
   const result = await getTodoById(id);
-  if (user._doc._id !== result.creatorId) {
-    throw new Error('No access');
-  }
+  const userId = user._doc._id;
+  const creatorId = result.creatorId.toString();
 
   if (!result) throw new Error('Invalid value');
+
+  if (userId !== creatorId) throw new Error('No access');
+
   return result;
 };
 
@@ -37,9 +41,10 @@ const removeTodoHandler = async (request, reply) => {
   const { user } = request;
 
   const todoToDelete = await getTodoById(id);
-  if (user._doc._id !== todoToDelete.creatorId) {
-    throw new Error('No access');
-  }
+  const userId = user._doc._id;
+  const creatorId = todoToDelete.creatorId.toString();
+
+  if (userId !== creatorId) throw new Error('No access');
 
   const todoToRemove = await removeTodo(id);
   if (!todoToRemove) throw new Error('Invalid value');
@@ -51,9 +56,10 @@ const updateTodoHandler = async (request, reply) => {
   const { id } = params;
 
   const todoToUpdate = await getTodoById(id);
-  if (user._doc._id !== todoToUpdate.creatorId) {
-    throw new Error('No access');
-  }
+  const userId = user._doc._id;
+  const creatorId = todoToUpdate.creatorId.toString();
+
+  if (userId !== creatorId) throw new Error('No access');
 
   const updated = await updateTodo(id, { ...body });
   if (!updated) throw new Error('Not found');
