@@ -1,4 +1,3 @@
-import { fastifyServer } from '../../server.js';
 import {
   createUser,
   getAllUsers,
@@ -21,7 +20,8 @@ const createUserHandler = async (request, reply) => {
 };
 
 const loginUserHandler = async (request, reply) => {
-  const { email, password } = request.body;
+  const { jwt, body } = request;
+  const { email, password } = body;
 
   const user = await verifyUser(email, password);
 
@@ -31,7 +31,7 @@ const loginUserHandler = async (request, reply) => {
     });
   }
 
-  const accessToken = fastifyServer.jwt.sign({ ...user });
+  const accessToken = jwt.sign({ ...user });
   return { accessToken };
 };
 
