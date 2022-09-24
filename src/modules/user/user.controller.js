@@ -10,6 +10,7 @@ const createUserHandler = async (request, reply) => {
   const { body } = request;
   try {
     const newUser = await createUser({ ...body });
+    reply.statusCode = 201;
     return newUser;
   } catch (error) {
     if (error.code === 11000) {

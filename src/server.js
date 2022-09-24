@@ -17,7 +17,6 @@ const connectDatabase = (server) => {
   });
 
   const dbUrl = process.env.MONGODB_URL;
-  console.log('database url: ', dbUrl);
   mongoose.connect(dbUrl);
 };
 
@@ -30,8 +29,6 @@ export const buildServer = (options = {}) => {
 
   const jwtSecret = process.env.JWT_SECRET;
   const clientUrl = process.env.CLIENT_URL;
-
-  console.log('jwt secret: ', jwtSecret, 'client url: ', clientUrl);
 
   fastifyServer.register(dbConnector);
   fastifyServer.register(todoRoutes, { prefix: '/todo' });

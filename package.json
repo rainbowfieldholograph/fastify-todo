@@ -21,6 +21,7 @@
     "mongoose": "^6.6.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.5.0",
     "nodemon": "^2.0.19",
     "pino-pretty": "^9.1.0",
     "tap": "^16.3.0"
