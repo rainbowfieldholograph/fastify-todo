@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/app.js",
-    "test": "tap --reporter=list --watch"
+    "dev": "cross-env NODE_ENV=dev nodemon src/app.js",
+    "start": "cross-env NODE_ENV=prod node src/app.js",
+    "test": "cross-env NODE_ENV=test tap --reporter=list --watch"
   },
   "type": "module",
   "keywords": [],
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^7.5.0",
+    "cross-env": "^7.0.3",
     "nodemon": "^2.0.19",
     "pino-pretty": "^9.1.0",
     "tap": "^16.3.0"

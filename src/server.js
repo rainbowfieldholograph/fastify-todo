@@ -6,7 +6,7 @@ import { todoRoutes } from './modules/todo/todo.route.js';
 import { dbConnector } from './plugins/database.js';
 import { healthCheckRoute } from './modules/health-check/health-check.route.js';
 import { userRoutes } from './modules/user/user.route.js';
-import { config } from 'dotenv';
+import { initConfig } from './utils/initConfig.js';
 
 const connectDatabase = (server) => {
   mongoose.connection.on('connected', () => {
@@ -21,7 +21,7 @@ const connectDatabase = (server) => {
 };
 
 export const buildServer = (options = {}) => {
-  config();
+  initConfig();
 
   const fastifyServer = fastify(options);
 
