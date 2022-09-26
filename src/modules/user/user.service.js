@@ -16,7 +16,9 @@ const verifyUser = async (email, password) => {
 
 const createUser = async (input) => {
   const newUser = new User(input);
-  return await newUser.save();
+  const createdUser = (await newUser.save()).toObject();
+  delete createdUser.password;
+  return createdUser;
 };
 
 const getAllUsers = async () => {
