@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 
 export const initConfig = () => {
-  const nodeEnv = process.env.NODE_ENV;
-  const path = `.env.${nodeEnv}`;
+  const { NODE_ENV } = process.env;
+  const path = `.env.${NODE_ENV}`;
   config({ path });
 };
