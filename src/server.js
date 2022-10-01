@@ -3,7 +3,6 @@ import fastifyJwt from '@fastify/jwt';
 import fastifyCors from '@fastify/cors';
 import mongoose from 'mongoose';
 import { todoRoutes } from './modules/todo/todo.route.js';
-import { dbConnector } from './plugins/database.js';
 import { healthCheckRoute } from './modules/health-check/health-check.route.js';
 import { userRoutes } from './modules/user/user.route.js';
 import { initConfig } from './utils/initConfig.js';
@@ -12,6 +11,7 @@ const connectDatabase = (server) => {
   mongoose.connection.on('connected', () => {
     server.log.info('MongoDB connected');
   });
+
   mongoose.connection.on('disconnected', () => {
     server.log.error('MongoDB disconnected');
   });
@@ -30,7 +30,6 @@ export const buildServer = (options = {}) => {
   const jwtSecret = process.env.JWT_SECRET;
   const clientUrl = process.env.CLIENT_URL;
 
-  fastifyServer.register(dbConnector);
   fastifyServer.register(todoRoutes, { prefix: '/todo' });
   fastifyServer.register(userRoutes, { prefix: '/user' });
   fastifyServer.register(healthCheckRoute);

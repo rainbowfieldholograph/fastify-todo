@@ -1,4 +1,4 @@
-import { ObjectId } from '@fastify/mongodb';
+import mongoose from 'mongoose';
 import { TODO_COLLECTION } from '../../models/constants.js';
 import { User } from '../../models/user.js';
 import {
@@ -8,10 +8,12 @@ import {
 } from './user.constants.js';
 
 const verifyUser = async (email, password) => {
-  return await User.findOne({
+  const foundUser = await User.findOne({
     email,
     password,
   });
+
+  return foundUser;
 };
 
 const createUser = async (input) => {
@@ -30,7 +32,7 @@ const getUserWithTodo = async (id) => {
   const [userWithTodo] = await User.aggregate([
     {
       $match: {
-        _id: ObjectId(id),
+        _id: mongoose.Types.ObjectId(id),
       },
     },
     {
@@ -49,7 +51,9 @@ const getUserWithTodo = async (id) => {
 };
 
 const removeUser = async (id) => {
-  return await User.findByIdAndDelete(id);
+  const removedUser = await User.findByIdAndDelete(id);
+
+  return removedUser;
 };
 
 export { verifyUser, createUser, getAllUsers, getUserWithTodo, removeUser };

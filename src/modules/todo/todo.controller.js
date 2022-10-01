@@ -33,7 +33,9 @@ const createTodoHandler = async (request, reply) => {
   const { body, user } = request;
 
   const candidate = { ...body, completed: false, creatorId: user._doc._id };
-  return await createTodo(candidate);
+  const createdUser = await createTodo(candidate);
+
+  return createdUser;
 };
 
 const removeTodoHandler = async (request, reply) => {

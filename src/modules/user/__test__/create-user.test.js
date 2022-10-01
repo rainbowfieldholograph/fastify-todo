@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 import { test } from 'tap';
 import { User } from '../../../models/user.js';
 import { buildServer } from '../../../server.js';
-import * as userService from '../user.service.js';
 
 // POST /user/
 
@@ -51,7 +50,7 @@ test('should fail to create user', async (t) => {
     server.close();
   });
 
-  const { statusCode, headers, ...response } = await server.inject({
+  const { statusCode, ...response } = await server.inject({
     method: 'POST',
     url: '/user',
     payload: {

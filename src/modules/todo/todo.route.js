@@ -5,11 +5,7 @@ import {
   removeTodoHandler,
   updateTodoHandler,
 } from './todo.controller.js';
-import {
-  patchTodoSchema,
-  postTodoSchema,
-  putTodoSchema,
-} from './todo.schema.js';
+import { patchTodoSchema, postTodoSchema, putTodoSchema } from './todo.schema.js';
 
 const todoRoutes = async (server, options) => {
   server.addHook('onRequest', server.authenticate); // validate authentication

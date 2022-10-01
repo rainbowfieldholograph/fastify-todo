@@ -1,10 +1,9 @@
-import { ObjectId } from '@fastify/mongodb';
 import mongoose from 'mongoose';
 import { TODO_COLLECTION } from './constants.js';
 
 const todo = mongoose.Schema({
   creatorId: {
-    type: ObjectId,
+    type: mongoose.Types.ObjectId,
     required: true,
   },
   title: {
