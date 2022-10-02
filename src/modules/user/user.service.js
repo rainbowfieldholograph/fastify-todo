@@ -13,7 +13,7 @@ const verifyUser = async (email, password) => {
     password,
   });
 
-  return foundUser;
+  return foundUser.toObject();
 };
 
 const createUser = async (input) => {

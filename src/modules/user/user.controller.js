@@ -46,15 +46,18 @@ const getAllUsersHandler = async (request, reply) => {
 
 const getUserWithTodoHandler = async (request, reply) => {
   const { user } = request;
-  const userWithTodo = await getUserWithTodo(user._doc._id);
+
+  const userWithTodo = await getUserWithTodo(user._id);
+
   if (!userWithTodo) throw new Error('Not found');
+
   return userWithTodo;
 };
 
 const removeSelfHandler = async (request, reply) => {
   const { user } = request;
 
-  return removeUser(user._doc._id);
+  return removeUser(user._id);
 };
 
 export {

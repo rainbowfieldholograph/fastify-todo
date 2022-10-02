@@ -1,7 +1,5 @@
 import { faker } from '@faker-js/faker';
-import mongoose from 'mongoose';
 import { test } from 'tap';
-import { User } from '../../../models/user.js';
 import { buildServer } from '../../../server.js';
 
 // POST /user/
@@ -14,8 +12,6 @@ test('should create user successfully', async (t) => {
   const server = buildServer();
 
   t.teardown(async () => {
-    await User.deleteMany({});
-    await mongoose.connection.close();
     server.close();
   });
 
@@ -46,8 +42,7 @@ test('should fail to create user', async (t) => {
   const server = buildServer();
 
   t.teardown(async () => {
-    await mongoose.connection.close();
-    server.close();
+    await server.close();
   });
 
   const { statusCode, ...response } = await server.inject({

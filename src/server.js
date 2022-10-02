@@ -53,5 +53,9 @@ export const buildServer = (options = {}) => {
     return next();
   });
 
+  fastifyServer.addHook('onClose', async () => {
+    await mongoose.connection.close();
+  });
+
   return fastifyServer;
 };

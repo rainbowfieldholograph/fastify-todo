@@ -19,7 +19,7 @@ const getTodoByIdHandler = async (request, reply) => {
   const { user } = request;
 
   const result = await getTodoById(id);
-  const userId = user._doc._id;
+  const userId = user._id;
   const creatorId = result.creatorId.toString();
 
   if (!result) throw new Error('Invalid value');
@@ -32,7 +32,7 @@ const getTodoByIdHandler = async (request, reply) => {
 const createTodoHandler = async (request, reply) => {
   const { body, user } = request;
 
-  const candidate = { ...body, completed: false, creatorId: user._doc._id };
+  const candidate = { ...body, completed: false, creatorId: user._id };
   const createdUser = await createTodo(candidate);
 
   return createdUser;
@@ -43,7 +43,7 @@ const removeTodoHandler = async (request, reply) => {
   const { user } = request;
 
   const todoToDelete = await getTodoById(id);
-  const userId = user._doc._id;
+  const userId = user._id;
   const creatorId = todoToDelete.creatorId.toString();
 
   if (userId !== creatorId) throw new Error('No access');
@@ -58,7 +58,7 @@ const updateTodoHandler = async (request, reply) => {
   const { id } = params;
 
   const todoToUpdate = await getTodoById(id);
-  const userId = user._doc._id;
+  const userId = user._id;
   const creatorId = todoToUpdate.creatorId.toString();
 
   if (userId !== creatorId) throw new Error('No access');
