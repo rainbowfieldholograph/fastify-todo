@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
-const handleCloseApp = async () => {
+async function handleCloseApp() {
   await mongoose.connection.close();
-};
+}
 
 export { handleCloseApp };
