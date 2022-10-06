@@ -14,5 +14,6 @@ module.exports = {
   rules: {
     'no-unused-vars': ['error', { vars: 'all', args: 'none', ignoreRestSiblings: false }],
     'new-cap': 0,
+    'no-invalid-this': 0,
   },
 };

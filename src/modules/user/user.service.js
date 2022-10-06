@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import { TODO_COLLECTION } from '../../models/constants.js';
-import { User } from '../../models/user.js';
+import { TODO_COLLECTION } from '../../database/models/constants.js';
+import { User } from '../../database/models/user.js';
 import {
   USER_RETURN_FIELDS,
   USER_WITH_TODO_RETURN_FIELDS,

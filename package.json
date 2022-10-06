@@ -20,7 +20,7 @@
     "@fastify/cors": "^8.1.0",
     "@fastify/jwt": "^6.3.2",
     "dotenv": "^16.0.2",
-    "fastify": "^4.6.0",
+    "fastify": "^4.7.0",
     "fastify-plugin": "^4.2.1",
     "mongoose": "^6.6.0"
   },

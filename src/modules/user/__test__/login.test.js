@@ -1,7 +1,7 @@
 import { test } from 'tap';
 import { buildServer } from '../../../server.js';
 import { faker } from '@faker-js/faker';
-import { User } from '../../../models/user.js';
+import { User } from '../../../database/models/user.js';
 
 test('should login user', async () => {
   test('given the email and password are correct', async (t) => {

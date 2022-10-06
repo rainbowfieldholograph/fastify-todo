@@ -1,4 +1,4 @@
-import { Todo } from '../../models/todo.js';
+import { Todo } from '../../database/models/todo.js';
 
 const createTodo = async (data) => {
   const newTodo = new Todo(data);
