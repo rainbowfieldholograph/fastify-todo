@@ -1,13 +1,11 @@
-import mongoose from 'mongoose';
 import { test } from 'tap';
 import { buildServer } from '../../../server.js';
 
 test('request the /healthcheck route', async (t) => {
-  const server = buildServer();
+  const server = await buildServer();
 
-  t.teardown(() => {
-    mongoose.connection.close();
-    server.close();
+  t.teardown(async () => {
+    await server.close();
   });
 
   const { statusCode, body } = await server.inject({

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const connect = (server) => {
+const connect = async (server) => {
   mongoose.connection.on('connected', () => {
     server.log.info('MongoDB connected');
   });
@@ -10,7 +10,8 @@ const connect = (server) => {
   });
 
   const dbUrl = process.env.MONGODB_URL;
-  mongoose.connect(dbUrl);
+
+  await mongoose.connect(dbUrl);
 };
 
 export { connect };

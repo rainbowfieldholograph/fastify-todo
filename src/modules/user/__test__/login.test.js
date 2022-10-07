@@ -3,16 +3,15 @@ import { buildServer } from '../../../server.js';
 import { faker } from '@faker-js/faker';
 import { User } from '../../../database/models/user.js';
 
-test('should login user', async () => {
-  test('given the email and password are correct', async (t) => {
+test('user login logic test', async () => {
+  test('should login user successfully', async (t) => {
     const username = faker.internet.userName();
     const email = faker.internet.email();
     const password = faker.internet.password();
 
-    const server = buildServer();
+    const server = await buildServer();
 
     t.teardown(async () => {
-      await User.deleteMany({});
       await server.close();
     });
 
@@ -43,7 +42,47 @@ test('should login user', async () => {
     t.equal(statusCode, 200);
     t.equal(verified.email, email);
     t.equal(verified.username, username);
+    t.equal(verified.password, undefined);
+    t.hasProps(verified, ['_id', 'email', 'username', 'iat']);
     t.type(verified.iat, 'number');
   });
-  test('given the email and password are incorrect', async (t) => {});
+
+  test('should fail to login user with wrong password', async (t) => {
+    const username = faker.internet.userName();
+    const email = faker.internet.email();
+    const password = faker.internet.password();
+
+    const server = await buildServer();
+
+    t.teardown(async () => {
+      await User.deleteMany({});
+      await server.close();
+    });
+
+    await server.inject({
+      method: 'POST',
+      url: '/user',
+      payload: {
+        email,
+        password,
+        username,
+      },
+    });
+
+    const wrongPassword = password + '123-wrong_password.9876';
+
+    const { statusCode, body: bodyJson } = await server.inject({
+      method: 'POST',
+      url: '/user/login',
+      payload: {
+        email,
+        password: wrongPassword,
+      },
+    });
+
+    const body = JSON.parse(bodyJson);
+
+    t.equal(statusCode, 401);
+    t.equal(body.message, 'Invalid email or password');
+  });
 });

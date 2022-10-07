@@ -8,23 +8,27 @@ import {
 } from './user.constants.js';
 
 const verifyUser = async (email, password) => {
-  const foundUser = await User.findOne({
-    email,
-    password,
-  });
+  const foundUser = (await User.findOne({ email, password }))?.toObject();
 
-  return foundUser.toObject();
+  if (!foundUser) return null;
+
+  delete foundUser.password;
+
+  return foundUser;
 };
 
 const createUser = async (input) => {
-  const newUser = new User(input);
-  const createdUser = (await newUser.save()).toObject();
+  const newUser = await new User(input).save();
+  const createdUser = newUser.toObject();
+
   delete createdUser.password;
+
   return createdUser;
 };
 
 const getAllUsers = async () => {
   const users = await User.find({}, USER_RETURN_FIELDS);
+
   return users;
 };
 
@@ -47,6 +51,7 @@ const getUserWithTodo = async (id) => {
       $limit: 1,
     },
   ]).project(USER_WITH_TODO_RETURN_FIELDS);
+
   return userWithTodo;
 };
 

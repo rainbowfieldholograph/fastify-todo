@@ -11,9 +11,7 @@ const createUserHandler = async (request, reply) => {
   try {
     const newUser = await createUser({ ...body });
 
-    reply.statusCode = 201;
-
-    return newUser;
+    reply.code(201).send(newUser);
   } catch (error) {
     if (error.code === 11000) {
       throw new Error('This email is not available');
@@ -30,17 +28,17 @@ const loginUserHandler = async (request, reply) => {
   const user = await verifyUser(email, password);
 
   if (!user) {
-    return reply.code(401).send({
-      message: 'Invalid email or password',
-    });
+    reply.code(401).send({ message: 'Invalid email or password' });
   }
 
-  const accessToken = jwt.sign({ ...user });
+  const accessToken = jwt.sign(user);
+
   return { accessToken };
 };
 
 const getAllUsersHandler = async (request, reply) => {
   const users = await getAllUsers();
+
   return users;
 };
 

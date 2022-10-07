@@ -10,12 +10,12 @@ import { jwtAuth } from './hooks/jwtAuth.js';
 import { authenticate } from './decorators/authenticate.js';
 import { connect } from './database/connect.js';
 
-export const buildServer = (options = {}) => {
+export const buildServer = async (options = {}) => {
   initConfig();
 
   const fastifyServer = fastify(options);
 
-  connect(fastifyServer);
+  await connect(fastifyServer);
 
   const { JWT_SECRET, CLIENT_URL } = process.env;
 

@@ -1,6 +1,6 @@
 import { buildServer } from './server.js';
 
-const server = buildServer({
+const server = await buildServer({
   logger: {
     level: 'info',
     transport: {
