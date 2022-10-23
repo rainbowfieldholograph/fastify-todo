@@ -1,15 +1,19 @@
+import { FastifyRequest } from 'fastify';
+import { FastifyReply } from 'fastify';
+import { RouteHandler } from 'fastify';
 import {
   createUser,
   getAllUsers,
   getUserWithTodo,
   removeUser,
   verifyUser,
-} from './user.service.js';
+} from './user.service';
 
-const createUserHandler = async (request, reply) => {
+const createUserHandler: RouteHandler = async (request, reply) => {
   const { body } = request;
+
   try {
-    const newUser = await createUser({ ...body });
+    const newUser = await createUser(body);
 
     reply.code(201).send(newUser);
   } catch (error) {
@@ -21,7 +25,10 @@ const createUserHandler = async (request, reply) => {
   }
 };
 
-const loginUserHandler = async (request, reply) => {
+const loginUserHandler = async (
+  request: FastifyRequest<{ Body: { email: string; password: string } }>,
+  reply: FastifyReply,
+) => {
   const { jwt, body } = request;
   const { email, password } = body;
 
@@ -31,19 +38,19 @@ const loginUserHandler = async (request, reply) => {
     reply.code(401).send({ message: 'Invalid email or password' });
   }
 
-  const accessToken = jwt.sign(user);
+  const accessToken = jwt.sign(user!);
 
   return { accessToken };
 };
 
-const getAllUsersHandler = async (request, reply) => {
+const getAllUsersHandler: RouteHandler = async (request, reply) => {
   const users = await getAllUsers();
 
   return users;
 };
 
-const getUserWithTodoHandler = async (request, reply) => {
-  const { user } = request;
+const getUserWithTodoHandler: RouteHandler = async (request, reply) => {
+  const { user } = request as any;
 
   const userWithTodo = await getUserWithTodo(user._id);
 
@@ -52,8 +59,8 @@ const getUserWithTodoHandler = async (request, reply) => {
   return userWithTodo;
 };
 
-const removeSelfHandler = async (request, reply) => {
-  const { user } = request;
+const removeSelfHandler: RouteHandler = async (request, reply) => {
+  const { user } = request as any;
 
   return removeUser(user._id);
 };

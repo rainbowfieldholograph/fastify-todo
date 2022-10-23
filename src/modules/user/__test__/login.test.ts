@@ -1,7 +1,8 @@
+// @ts-nocheck
 import { test } from 'tap';
-import { buildServer } from '../../../server.js';
+import { buildServer } from 'server';
 import { faker } from '@faker-js/faker';
-import { User } from '../../../database/models/user.js';
+import { UserModel } from 'database/models/user';
 
 test('user login logic test', async () => {
   test('should login user successfully', async (t) => {
@@ -55,7 +56,7 @@ test('user login logic test', async () => {
     const server = await buildServer();
 
     t.teardown(async () => {
-      await User.deleteMany({});
+      await UserModel.deleteMany({});
       await server.close();
     });
 

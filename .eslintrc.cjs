@@ -16,4 +16,9 @@ module.exports = {
     'new-cap': 0,
     'no-invalid-this': 0,
   },
+  settings: {
+    'import/resolver': {
+      typescript: {},
+    },
+  },
 };

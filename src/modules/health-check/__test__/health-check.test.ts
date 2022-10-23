@@ -1,5 +1,6 @@
+// @ts-nocheck
 import { test } from 'tap';
-import { buildServer } from '../../../server.js';
+import { buildServer } from 'server';
 
 test('request the /healthcheck route', async (t) => {
   const server = await buildServer();

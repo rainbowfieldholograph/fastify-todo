@@ -4,15 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=dev nodemon src/app.js",
-    "start": "cross-env NODE_ENV=prod node src/app.js",
-    "test": "cross-env NODE_ENV=test tap --reporter=list --watch",
+    "build": "tsc",
+    "dev": "cross-env NODE_PATH=./ NODE_ENV=dev nodemon src/app.ts",
+    "start": "cross-env NODE_PATH=./ NODE_ENV=prod ts-node src/app.ts",
+    "test": "cross-env NODE_PATH=./ NODE_ENV=test tap --node-arg=--require=ts-node/register --reporter=list --watch",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
     "lint:check": "eslint .",
     "lint:fix": "eslint --fix ."
   },
-  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -20,21 +20,28 @@
     "@fastify/cors": "^8.1.0",
     "@fastify/jwt": "^6.3.2",
     "dotenv": "^16.0.2",
-    "fastify": "^4.7.0",
-    "fastify-plugin": "^4.2.1",
-    "mongoose": "^6.6.5"
+    "fastify": "^4.9.2",
+    "fastify-plugin": "^4.3.0",
+    "fastify-type-provider-zod": "^1.1.7",
+    "mongoose": "^6.6.5",
+    "zod": "^3.19.1"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.5.0",
+    "@types/node": "^18.11.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.24.0",
     "eslint-config-metarhia": "^8.1.0",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^3.5.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
     "nodemon": "^2.0.19",
     "pino-pretty": "^9.1.0",
     "prettier": "^2.7.1",
-    "tap": "^16.3.0"
+    "tap": "^16.3.0",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.0",
+    "typescript": "^4.8.4"
   }
 }

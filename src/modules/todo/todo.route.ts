@@ -1,13 +1,14 @@
+import { FastifyPluginAsync } from 'fastify';
+import { postTodoSchema, patchTodoSchema, putTodoSchema } from './schemas';
 import {
   createTodoHandler,
   getAllTodoHandler,
   getTodoByIdHandler,
   removeTodoHandler,
   updateTodoHandler,
-} from './todo.controller.js';
-import { patchTodoSchema, postTodoSchema, putTodoSchema } from './todo.schema.js';
+} from './todo.controller';
 
-const todoRoutes = async (server, options) => {
+const todoRoutes: FastifyPluginAsync = async (server, options) => {
   server.addHook('onRequest', server.authenticate); // validate authentication
 
   server.get('/', getAllTodoHandler);
