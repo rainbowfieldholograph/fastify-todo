@@ -5,16 +5,15 @@ import { todoRoutes } from 'modules/todo/todo.route';
 import { healthCheckRoute } from 'modules/health-check/health-check.route';
 import { userRoutes } from 'modules/user/user.route';
 import { initConfig } from 'utils/init-config';
-import { jwtAuth } from 'hooks/jwtAuth';
+import { jwtAuth } from 'hooks/jwt-auth';
 import { authenticate } from 'decorators/authenticate';
 import { connect } from 'database/connect';
-import { closeDb } from 'hooks/closeDb';
+import { closeDb } from 'hooks/close-db';
 import {
   validatorCompiler,
   serializerCompiler,
   ZodTypeProvider,
 } from 'fastify-type-provider-zod';
-import { ZodError } from 'zod';
 
 export const buildServer = async (options = {}) => {
   initConfig();
