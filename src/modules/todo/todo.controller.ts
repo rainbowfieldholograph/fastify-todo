@@ -4,6 +4,7 @@ import {
   createTodo,
   getAllTodo,
   getTodoById,
+  getUserTodos,
   removeTodo,
   updateTodo,
 } from './todo.service';
@@ -88,10 +89,20 @@ const updateTodoHandler = async (
   return updated;
 };
 
+const getUserTodosHandler = async (request: any, response: any) => {
+  const { user } = request as any;
+
+  const todos = await getUserTodos(user._id);
+
+  if (!todos) throw new Error('Todos cant be found');
+
+  return todos;
+};
+
 export {
   createTodoHandler,
-  getAllTodoHandler,
   getTodoByIdHandler,
   removeTodoHandler,
   updateTodoHandler,
+  getUserTodosHandler,
 };

@@ -4,6 +4,7 @@ import { RouteHandler } from 'fastify';
 import {
   createUser,
   getAllUsers,
+  getUser,
   getUserWithTodo,
   removeUser,
   verifyUser,
@@ -59,6 +60,16 @@ const getUserWithTodoHandler: RouteHandler = async (request, reply) => {
   return userWithTodo;
 };
 
+const getUserHandler: RouteHandler = async (request, reply) => {
+  const { user } = request as any;
+
+  const foundUser = await getUser(user._id);
+
+  if (!foundUser) throw new Error('User not found');
+
+  return foundUser;
+};
+
 const removeSelfHandler: RouteHandler = async (request, reply) => {
   const { user } = request as any;
 
@@ -69,6 +80,6 @@ export {
   createUserHandler,
   loginUserHandler,
   getAllUsersHandler,
-  getUserWithTodoHandler,
   removeSelfHandler,
+  getUserHandler,
 };

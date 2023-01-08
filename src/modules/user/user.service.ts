@@ -33,6 +33,14 @@ const getAllUsers = async () => {
   return users;
 };
 
+const getUser = async (id: User['_id']) => {
+  const user = await UserModel.findById(id);
+
+  if (!user) return null;
+
+  return user.toObject();
+};
+
 const getUserWithTodo = async (id: any) => {
   const [userWithTodo] = await UserModel.aggregate([
     {
@@ -62,4 +70,4 @@ const removeUser = async (id: any) => {
   return removedUser;
 };
 
-export { verifyUser, createUser, getAllUsers, getUserWithTodo, removeUser };
+export { verifyUser, createUser, getAllUsers, getUserWithTodo, removeUser, getUser };
