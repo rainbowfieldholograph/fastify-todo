@@ -21,8 +21,6 @@ const getTodoByIdHandler = async (request: FastifyRequest, reply: FastifyReply) 
   const { id } = request.params as any;
   const { user } = request as any;
 
-  console.log('USER: ', user);
-
   const result = await getTodoById(id);
   const userId = user._id.toString();
 

@@ -1,14 +1,7 @@
 import { FastifyRequest } from 'fastify';
 import { FastifyReply } from 'fastify';
 import { RouteHandler } from 'fastify';
-import {
-  createUser,
-  getAllUsers,
-  getUser,
-  getUserWithTodo,
-  removeUser,
-  verifyUser,
-} from './user.service';
+import { createUser, getAllUsers, getUser, removeUser, verifyUser } from './user.service';
 
 const createUserHandler: RouteHandler = async (request, reply) => {
   const { body } = request;
@@ -48,16 +41,6 @@ const getAllUsersHandler: RouteHandler = async (request, reply) => {
   const users = await getAllUsers();
 
   return users;
-};
-
-const getUserWithTodoHandler: RouteHandler = async (request, reply) => {
-  const { user } = request as any;
-
-  const userWithTodo = await getUserWithTodo(user._id);
-
-  if (!userWithTodo) throw new Error('Not found');
-
-  return userWithTodo;
 };
 
 const getUserHandler: RouteHandler = async (request, reply) => {

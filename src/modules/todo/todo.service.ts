@@ -39,8 +39,6 @@ const getUserTodos = async (userId: User['_id']) => {
 
   if (!todos) return null;
 
-  console.log('get user todos: ', todos, userId);
-
   return todos;
 };
 

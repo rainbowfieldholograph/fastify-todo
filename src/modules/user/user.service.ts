@@ -41,33 +41,10 @@ const getUser = async (id: User['_id']) => {
   return user.toObject();
 };
 
-const getUserWithTodo = async (id: any) => {
-  const [userWithTodo] = await UserModel.aggregate([
-    {
-      $match: {
-        _id: new Types.ObjectId(id),
-      },
-    },
-    {
-      $lookup: {
-        from: TODO_COLLECTION,
-        localField: '_id',
-        foreignField: 'creatorId',
-        as: TODO_FIELD,
-      },
-    },
-    {
-      $limit: 1,
-    },
-  ]).project(USER_WITH_TODO_RETURN_FIELDS as any);
-
-  return userWithTodo;
-};
-
 const removeUser = async (id: any) => {
   const removedUser = await UserModel.findByIdAndDelete(id);
 
   return removedUser;
 };
 
-export { verifyUser, createUser, getAllUsers, getUserWithTodo, removeUser, getUser };
+export { verifyUser, createUser, getAllUsers, removeUser, getUser };
