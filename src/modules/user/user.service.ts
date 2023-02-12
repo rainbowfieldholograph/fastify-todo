@@ -1,11 +1,5 @@
-import { Types } from 'mongoose';
-import { TODO_COLLECTION } from 'database/constants';
 import { User, UserModel } from 'database/models/user';
-import {
-  USER_RETURN_FIELDS,
-  USER_WITH_TODO_RETURN_FIELDS,
-  TODO_FIELD,
-} from './user.constants';
+import { USER_RETURN_FIELDS } from './user.constants';
 import { MakeOptional } from 'utils/make-optional';
 
 const verifyUser = async (email: string, password: string) => {
@@ -47,4 +41,13 @@ const removeUser = async (id: any) => {
   return removedUser;
 };
 
-export { verifyUser, createUser, getAllUsers, removeUser, getUser };
+const updateUser = async (id: User['_id'], updateData: Omit<User, '_id'>) => {
+  const updatedUser = await UserModel.findByIdAndUpdate(id, updateData, {
+    new: true,
+    runValidators: true,
+  });
+
+  return updatedUser;
+};
+
+export { verifyUser, createUser, getAllUsers, removeUser, getUser, updateUser };

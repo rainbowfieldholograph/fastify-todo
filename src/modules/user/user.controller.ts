@@ -1,7 +1,15 @@
+import { User } from 'database/models/user';
 import { FastifyRequest } from 'fastify';
 import { FastifyReply } from 'fastify';
 import { RouteHandler } from 'fastify';
-import { createUser, getAllUsers, getUser, removeUser, verifyUser } from './user.service';
+import {
+  createUser,
+  getAllUsers,
+  getUser,
+  removeUser,
+  updateUser,
+  verifyUser,
+} from './user.service';
 
 const createUserHandler: RouteHandler = async (request, reply) => {
   const { body } = request;
@@ -56,7 +64,22 @@ const getUserHandler: RouteHandler = async (request, reply) => {
 const removeSelfHandler: RouteHandler = async (request, reply) => {
   const { user } = request as any;
 
-  return removeUser(user._id);
+  const removedUser = await removeUser(user._id);
+
+  if (!removedUser) throw new Error('User not found');
+
+  return removedUser;
+};
+
+const updateSelfHandler = async (request: FastifyRequest) => {
+  const body = request.body as User;
+  const user = request.user as User;
+
+  const updatedUser = updateUser(user._id, body);
+
+  if (!updatedUser) throw new Error('User not found');
+
+  return updatedUser;
 };
 
 export {
@@ -65,4 +88,5 @@ export {
   getAllUsersHandler,
   removeSelfHandler,
   getUserHandler,
+  updateSelfHandler,
 };
