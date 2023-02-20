@@ -1,9 +1,10 @@
 import { z } from 'zod';
+import { completedSchema, descriptionSchema, titleSchema } from './todo.schema';
 
 const putTodoSchemaBody = z.object({
-  title: z.string().max(40),
-  description: z.string(),
-  completed: z.boolean(),
+  title: titleSchema,
+  description: descriptionSchema,
+  completed: completedSchema,
 });
 
 const putTodoSchemaParams = z.object({

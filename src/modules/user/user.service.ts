@@ -2,6 +2,9 @@ import { User, UserModel } from 'database/models/user';
 import { USER_RETURN_FIELDS } from './user.constants';
 import { MakeOptional } from 'utils/make-optional';
 
+type CreateUserInput = Pick<User, 'email' | 'password' | 'username'>;
+type UpdateUserInput = Partial<Pick<User, 'password' | 'email' | 'username'>>;
+
 const verifyUser = async (email: string, password: string) => {
   const foundUser = await UserModel.findOne({ email, password });
   if (!foundUser) return null;
@@ -12,13 +15,13 @@ const verifyUser = async (email: string, password: string) => {
   return foundUserObject as Omit<User, 'password'>;
 };
 
-const createUser = async (input: any) => {
+const createUser = async (input: CreateUserInput) => {
   const newUser = await new UserModel(input).save();
-  const createdUser = newUser.toObject() as any;
+  const createdUser = newUser.toObject();
 
-  delete createdUser.password;
+  const { password, ...userWithoutPassword } = createdUser;
 
-  return createdUser;
+  return userWithoutPassword;
 };
 
 const getAllUsers = async () => {
@@ -27,7 +30,7 @@ const getAllUsers = async () => {
   return users;
 };
 
-const getUser = async (id: User['_id']) => {
+const getUser = async (id: string) => {
   const user = await UserModel.findById(id);
 
   if (!user) return null;
@@ -35,13 +38,13 @@ const getUser = async (id: User['_id']) => {
   return user.toObject();
 };
 
-const removeUser = async (id: any) => {
+const removeUser = async (id: string) => {
   const removedUser = await UserModel.findByIdAndDelete(id);
 
   return removedUser;
 };
 
-const updateUser = async (id: User['_id'], updateData: Omit<User, '_id'>) => {
+const updateUser = async (id: string, updateData: UpdateUserInput) => {
   const updatedUser = await UserModel.findByIdAndUpdate(id, updateData, {
     new: true,
     runValidators: true,

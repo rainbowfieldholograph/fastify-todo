@@ -1,5 +1,6 @@
+import { User } from 'database/models/user';
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { PatchTodoParams, PostTodo } from './schemas';
+import { PatchTodoBody, PatchTodoParams, PostTodo } from './schemas';
 import {
   createTodo,
   getAllTodo,
@@ -17,26 +18,25 @@ const getAllTodoHandler = async (request: FastifyRequest, reply: FastifyReply) =
   return result;
 };
 
-const getTodoByIdHandler = async (request: FastifyRequest, reply: FastifyReply) => {
-  const { id } = request.params as any;
-  const { user } = request as any;
+const getTodoByIdHandler = async (
+  request: FastifyRequest<{ Params: { id: string } }>,
+) => {
+  const { id } = request.params;
+  const user = request.user as User;
 
-  const result = await getTodoById(id);
+  const foundTodo = await getTodoById(id);
   const userId = user._id.toString();
 
-  if (!result) throw new Error('Invalid value');
+  if (!foundTodo) throw new Error('Invalid value');
 
-  const creatorId = result.creatorId.toString();
+  const creatorId = foundTodo.creatorId.toString();
 
   if (userId !== creatorId) throw new Error('No access');
 
-  return result;
+  return foundTodo;
 };
 
-const createTodoHandler = async (
-  request: FastifyRequest<{ Body: PostTodo }>,
-  reply: FastifyReply,
-) => {
+const createTodoHandler = async (request: FastifyRequest<{ Body: PostTodo }>) => {
   const { body, user } = request as any;
 
   const candidate = { ...body, completed: false, creatorId: user._id };
@@ -45,52 +45,51 @@ const createTodoHandler = async (
   return createdUser;
 };
 
-const removeTodoHandler = async (
-  request: FastifyRequest<{ Body: PostTodo }>,
-  reply: FastifyReply,
-) => {
-  const { id } = request.params as any;
-  const { user } = request as any;
+const removeTodoHandler = async (request: FastifyRequest<{ Params: { id: string } }>) => {
+  const { id } = request.params;
+  const user = request.user as User;
 
   const todoToDelete = await getTodoById(id);
-  const userId = user._id;
 
   if (!todoToDelete) throw new Error('Invalid value');
 
+  const userId = user._id.toString();
   const creatorId = todoToDelete.creatorId.toString();
 
-  if (userId.toString() !== creatorId) throw new Error('No access');
+  if (userId !== creatorId) {
+    throw new Error('No access');
+  }
 
   const todoToRemove = await removeTodo(id);
   if (!todoToRemove) throw new Error('Invalid value');
+
   return todoToRemove;
 };
 
 const updateTodoHandler = async (
-  request: FastifyRequest<{ Params: PatchTodoParams }>,
-  reply: FastifyReply,
+  request: FastifyRequest<{ Params: PatchTodoParams; Body: PatchTodoBody }>,
 ) => {
-  const { body, params, user } = request as any;
+  const { body, params } = request;
   const { id } = params;
+  const user = request.user as User;
 
   const todoToUpdate = await getTodoById(id);
-  const userId = user._id;
 
   if (!todoToUpdate) throw new Error('Not found');
 
+  const userId = user._id.toString();
   const creatorId = todoToUpdate.creatorId.toString();
 
-  if (userId.toString() !== creatorId) throw new Error('No access');
+  if (userId !== creatorId) throw new Error('No access');
 
   const updated = await updateTodo(id, body);
-  // if (!updated) throw new Error('Not found');
   return updated;
 };
 
-const getUserTodosHandler = async (request: any, response: any) => {
-  const { user } = request as any;
+const getUserTodosHandler = async (request: FastifyRequest) => {
+  const user = request.user as User;
 
-  const todos = await getUserTodos(user._id);
+  const todos = await getUserTodos(user._id.toString());
 
   if (!todos) throw new Error('Todos cant be found');
 

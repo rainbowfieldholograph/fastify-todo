@@ -11,4 +11,4 @@ export const createUserSchema = {
   body: createUserBodySchema,
 };
 
-export type CreateUser = z.infer<typeof createUserBodySchema>;
+export type CreateUserBody = z.infer<typeof createUserBodySchema>;

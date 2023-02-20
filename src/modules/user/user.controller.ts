@@ -1,7 +1,6 @@
 import { User } from 'database/models/user';
-import { FastifyRequest } from 'fastify';
-import { FastifyReply } from 'fastify';
-import { RouteHandler } from 'fastify';
+import { FastifyRequest, FastifyReply, RouteHandler } from 'fastify';
+import { CreateUserBody, LoginUserBody, PatchUserBody } from './schemas';
 import {
   createUser,
   getAllUsers,
@@ -11,7 +10,10 @@ import {
   verifyUser,
 } from './user.service';
 
-const createUserHandler: RouteHandler = async (request, reply) => {
+const createUserHandler = async (
+  request: FastifyRequest<{ Body: CreateUserBody }>,
+  reply: FastifyReply,
+) => {
   const { body } = request;
 
   try {
@@ -28,7 +30,7 @@ const createUserHandler: RouteHandler = async (request, reply) => {
 };
 
 const loginUserHandler = async (
-  request: FastifyRequest<{ Body: { email: string; password: string } }>,
+  request: FastifyRequest<{ Body: LoginUserBody }>,
   reply: FastifyReply,
 ) => {
   const { jwt, body } = request;
@@ -52,9 +54,9 @@ const getAllUsersHandler: RouteHandler = async (request, reply) => {
 };
 
 const getUserHandler: RouteHandler = async (request, reply) => {
-  const { user } = request as any;
+  const user = request.user as User;
 
-  const foundUser = await getUser(user._id);
+  const foundUser = await getUser(user._id.toString());
 
   if (!foundUser) throw new Error('User not found');
 
@@ -62,20 +64,20 @@ const getUserHandler: RouteHandler = async (request, reply) => {
 };
 
 const removeSelfHandler: RouteHandler = async (request, reply) => {
-  const { user } = request as any;
+  const user = request.user as User;
 
-  const removedUser = await removeUser(user._id);
+  const removedUser = await removeUser(user._id.toString());
 
   if (!removedUser) throw new Error('User not found');
 
   return removedUser;
 };
 
-const updateSelfHandler = async (request: FastifyRequest) => {
-  const body = request.body as User;
+const updateSelfHandler = async (request: FastifyRequest<{ Body: PatchUserBody }>) => {
+  const { body } = request;
   const user = request.user as User;
 
-  const updatedUser = updateUser(user._id, body);
+  const updatedUser = updateUser(user._id.toString(), body);
 
   if (!updatedUser) throw new Error('User not found');
 

@@ -1,9 +1,10 @@
-import { TodoModel } from 'database/models/todo';
-import { User } from 'database/models/user';
+import { Todo, TodoModel } from 'database/models/todo';
 import { Types } from 'mongoose';
-import { PostTodo } from './schemas';
 
-const createTodo = async (data: PostTodo) => {
+type CreateTodoInput = Pick<Todo, 'description' | 'title'>;
+type UpdateTodoInput = Partial<Pick<Todo, 'completed' | 'description' | 'title'>>;
+
+const createTodo = async (data: CreateTodoInput) => {
   const newTodo = new TodoModel(data);
   const createdTodo = await newTodo.save();
 
@@ -28,13 +29,13 @@ const removeTodo = async (id: string) => {
   return removedTodo;
 };
 
-const updateTodo = async (id: string, input: any) => {
+const updateTodo = async (id: string, input: UpdateTodoInput) => {
   const updatedTodo = await TodoModel.findByIdAndUpdate(id, input, { new: true });
 
   return updatedTodo;
 };
 
-const getUserTodos = async (userId: User['_id']) => {
+const getUserTodos = async (userId: string) => {
   const todos = await TodoModel.find({ creatorId: new Types.ObjectId(userId) });
 
   if (!todos) return null;

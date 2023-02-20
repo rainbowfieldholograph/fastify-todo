@@ -10,4 +10,4 @@ export const loginUserSchema = {
   body: loginUserBodySchema,
 };
 
-export type LoginUser = z.infer<typeof loginUserBodySchema>;
+export type LoginUserBody = z.infer<typeof loginUserBodySchema>;

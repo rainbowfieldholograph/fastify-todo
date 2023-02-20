@@ -7,7 +7,7 @@ import { userRoutes } from 'modules/user/user.route';
 import { initConfig } from 'utils/init-config';
 import { jwtAuth } from 'hooks/jwt-auth';
 import { authenticate } from 'decorators/authenticate';
-import { connect } from 'database/connect';
+import { connectDatabase } from 'database/connect';
 import { closeDb } from 'hooks/close-db';
 import {
   validatorCompiler,
@@ -24,7 +24,7 @@ export const buildServer = async (options = {}) => {
   fastifyServer.setSerializerCompiler(serializerCompiler);
   fastifyServer.withTypeProvider<ZodTypeProvider>();
 
-  await connect(fastifyServer);
+  await connectDatabase(fastifyServer);
 
   const { JWT_SECRET, CLIENT_URL } = process.env;
 
