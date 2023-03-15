@@ -1,5 +1,10 @@
 import { FastifyPluginAsync } from 'fastify';
-import { postTodoSchema, patchTodoSchema, putTodoSchema } from './schemas';
+import {
+  postTodoSchema,
+  patchTodoSchema,
+  putTodoSchema,
+  getAllTodosSchema,
+} from './schemas';
 import {
   createTodoHandler,
   getTodoByIdHandler,
@@ -14,6 +19,7 @@ const todoRoutes: FastifyPluginAsync = async (server, options) => {
   server.route({
     url: '/',
     method: 'GET',
+    schema: getAllTodosSchema,
     handler: getUserTodosHandler,
   });
 

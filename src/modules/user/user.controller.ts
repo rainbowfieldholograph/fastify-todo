@@ -36,7 +36,7 @@ const loginUserHandler = async (
   const { jwt, body } = request;
   const { email, password } = body;
 
-  const user = await verifyUser(email, password);
+  const user = await verifyUser({ email, password });
 
   if (!user) {
     reply.code(401).send({ message: 'Invalid email or password' });

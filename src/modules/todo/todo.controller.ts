@@ -1,6 +1,11 @@
 import { User } from 'database/models/user';
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { PatchTodoBody, PatchTodoParams, PostTodo } from './schemas';
+import {
+  GetAllTodosQuerystring,
+  PatchTodoBody,
+  PatchTodoParams,
+  PostTodo,
+} from './schemas';
 import {
   createTodo,
   getAllTodo,
@@ -9,6 +14,7 @@ import {
   removeTodo,
   updateTodo,
 } from './todo.service';
+import { splitSortValue } from './utils';
 
 const getAllTodoHandler = async (request: FastifyRequest, reply: FastifyReply) => {
   const result = await getAllTodo();
@@ -86,12 +92,16 @@ const updateTodoHandler = async (
   return updated;
 };
 
-const getUserTodosHandler = async (request: FastifyRequest) => {
+const getUserTodosHandler = async (
+  request: FastifyRequest<{ Querystring: GetAllTodosQuerystring }>,
+) => {
   const user = request.user as User;
+  const { sort } = request.query;
 
-  const todos = await getUserTodos(user._id.toString());
-
-  if (!todos) throw new Error('Todos cant be found');
+  const todos = await getUserTodos({
+    userId: user._id.toString(),
+    sort: sort && splitSortValue(sort),
+  });
 
   return todos;
 };
