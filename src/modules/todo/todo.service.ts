@@ -36,17 +36,20 @@ const updateTodo = async (id: string, input: UpdateTodoInput): Promise<Todo | nu
   return updatedTodo;
 };
 
-type GetUserTodosInput = {
-  userId: string;
-  sort?: [TodoSortFields, TodoSortTypes];
-};
+type Sort = { sortBy: TodoSortFields[number]; sortType: TodoSortTypes[number] };
+
+type GetUserTodosInput = { userId: string; sort?: Sort };
+
 const getUserTodos = async ({ userId, sort }: GetUserTodosInput): Promise<Todo[]> => {
   const todoDocuments = TodoModel.find({ creatorId: new Types.ObjectId(userId) });
 
   if (!sort) return await todoDocuments.lean();
 
-  const [sortValue, sortType] = sort;
-  const todos = await todoDocuments.sort({ [sortValue]: sortType }).lean();
+  const { sortBy, sortType } = sort;
+  const todos = await todoDocuments
+    .collation({ locale: 'en' })
+    .sort({ [sortBy]: sortType })
+    .lean();
 
   return todos;
 };

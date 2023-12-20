@@ -14,7 +14,6 @@ import {
   removeTodo,
   updateTodo,
 } from './todo.service';
-import { splitSortValue } from './utils';
 
 const getAllTodoHandler = async (request: FastifyRequest, reply: FastifyReply) => {
   const result = await getAllTodo();
@@ -96,13 +95,14 @@ const getUserTodosHandler = async (
   request: FastifyRequest<{ Querystring: GetAllTodosQuerystring }>,
 ) => {
   const user = request.user as User;
-  const { sort } = request.query;
+  const { sortBy, sortType } = request.query;
 
-  const todos = await getUserTodos({
-    userId: user._id.toString(),
-    sort: sort && splitSortValue(sort),
-  });
+  const requestParams = { userId: user._id.toString() };
+  if (sortBy && sortType) {
+    Object.defineProperty(requestParams, 'sort', { value: { sortBy, sortType } });
+  }
 
+  const todos = await getUserTodos(requestParams);
   return todos;
 };
 
