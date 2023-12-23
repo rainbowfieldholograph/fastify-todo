@@ -15,7 +15,7 @@ import {
   updateTodo,
 } from './todo.service';
 
-const getAllTodoHandler = async (request: FastifyRequest, reply: FastifyReply) => {
+const _getAllTodoHandler = async (_request: FastifyRequest, _reply: FastifyReply) => {
   const result = await getAllTodo();
 
   if (result.length === 0) throw new Error('No documents found');
@@ -42,6 +42,7 @@ const getTodoByIdHandler = async (
 };
 
 const createTodoHandler = async (request: FastifyRequest<{ Body: PostTodo }>) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { body, user } = request as any;
 
   const candidate = { ...body, completed: false, creatorId: user._id };
@@ -51,24 +52,31 @@ const createTodoHandler = async (request: FastifyRequest<{ Body: PostTodo }>) =>
 };
 
 const removeTodoHandler = async (request: FastifyRequest<{ Params: { id: string } }>) => {
-  const { id } = request.params;
-  const user = request.user as User;
+  try {
+    const { id } = request.params;
+    const user = request.user as User;
 
-  const todoToDelete = await getTodoById(id);
+    if (request.raw.aborted) {
+      throw new Error('Aborted');
+    }
 
-  if (!todoToDelete) throw new Error('Invalid value');
+    const todoToDelete = await getTodoById(id);
+    if (!todoToDelete) throw new Error('Invalid value');
 
-  const userId = user._id.toString();
-  const creatorId = todoToDelete.creatorId.toString();
+    const userId = user._id.toString();
+    const creatorId = todoToDelete.creatorId.toString();
 
-  if (userId !== creatorId) {
-    throw new Error('No access');
+    if (userId !== creatorId) {
+      throw new Error('No access');
+    }
+
+    const todoToRemove = await removeTodo(id);
+
+    return todoToRemove;
+  } catch (error) {
+    console.error(error);
+    throw new Error(error.message);
   }
-
-  const todoToRemove = await removeTodo(id);
-  if (!todoToRemove) throw new Error('Invalid value');
-
-  return todoToRemove;
 };
 
 const updateTodoHandler = async (

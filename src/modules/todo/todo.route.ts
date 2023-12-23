@@ -13,7 +13,7 @@ import {
   updateTodoHandler,
 } from './todo.controller';
 
-const todoRoutes: FastifyPluginAsync = async (server, options) => {
+const todoRoutes: FastifyPluginAsync = async (server, _options) => {
   server.addHook('onRequest', server.authenticate); // validate authentication
 
   server.route({

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { faker } from '@faker-js/faker';
 import { test } from 'tap';
 import { buildServer } from 'server';

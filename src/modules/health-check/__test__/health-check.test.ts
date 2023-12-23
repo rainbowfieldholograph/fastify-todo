@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { test } from 'tap';
 import { buildServer } from 'server';
 

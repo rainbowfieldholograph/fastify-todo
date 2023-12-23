@@ -1,8 +1,7 @@
-// @ts-nocheck
 import { test } from 'tap';
 import { buildServer } from 'server';
 import { faker } from '@faker-js/faker';
-import { UserModel } from 'database/models/user';
+import { User, UserModel } from 'database/models/user';
 
 test('user login logic test', async () => {
   test('should login user successfully', async (t) => {
@@ -38,7 +37,7 @@ test('user login logic test', async () => {
     const body = JSON.parse(bodyJson);
 
     const { accessToken } = body;
-    const verified = server.jwt.verify(accessToken);
+    const verified = server.jwt.verify<User & { iat: number }>(accessToken);
 
     t.equal(statusCode, 200);
     t.equal(verified.email, email);

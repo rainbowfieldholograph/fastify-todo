@@ -49,13 +49,13 @@ const loginUserHandler = async (
   return { accessToken };
 };
 
-const getAllUsersHandler: RouteHandler = async (request, reply) => {
+const getAllUsersHandler: RouteHandler = async (_request, _reply) => {
   const users = await getAllUsers();
 
   return users;
 };
 
-const getUserHandler: RouteHandler = async (request, reply) => {
+const getUserHandler: RouteHandler = async (request, _reply) => {
   const user = request.user as User;
 
   const foundUser = await getUser(user._id.toString());
@@ -65,7 +65,7 @@ const getUserHandler: RouteHandler = async (request, reply) => {
   return foundUser;
 };
 
-const removeSelfHandler: RouteHandler = async (request, reply) => {
+const removeSelfHandler: RouteHandler = async (request, _reply) => {
   const user = request.user as User;
 
   const removedUser = await removeUser(user._id.toString());
