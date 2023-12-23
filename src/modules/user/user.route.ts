@@ -1,8 +1,8 @@
 import { FastifyPluginAsync } from 'fastify';
-import { createUserSchema, loginUserSchema } from './schemas';
+import { signUpSchema, loginUserSchema } from './schemas';
 import { patchUserSchema } from './schemas/patch-user.schema';
 import {
-  createUserHandler,
+  signUpHandler,
   getAllUsersHandler,
   getUserHandler,
   loginUserHandler,
@@ -20,9 +20,9 @@ const userRoutes: FastifyPluginAsync = async (server) => {
 
   server.route({
     method: 'POST',
-    url: '/',
-    schema: createUserSchema,
-    handler: createUserHandler,
+    url: '/sign-up',
+    schema: signUpSchema,
+    handler: signUpHandler,
   });
 
   server.route({

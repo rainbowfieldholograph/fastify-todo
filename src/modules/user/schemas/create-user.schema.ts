@@ -1,14 +1,14 @@
 import { z } from 'zod';
 import { emailSchema, passwordSchema, usernameSchema } from './user.schema';
 
-const createUserBodySchema = z.object({
+const signUpUserBodySchema = z.object({
   username: usernameSchema,
   email: emailSchema,
   password: passwordSchema,
 });
 
-export const createUserSchema = {
-  body: createUserBodySchema,
+export const signUpSchema = {
+  body: signUpUserBodySchema,
 };
 
-export type CreateUserBody = z.infer<typeof createUserBodySchema>;
+export type SignupUserBody = z.infer<typeof signUpUserBodySchema>;

@@ -1,6 +1,6 @@
 import { User } from 'database/models/user';
 import { FastifyRequest, FastifyReply, RouteHandler } from 'fastify';
-import { CreateUserBody, LoginUserBody, PatchUserBody } from './schemas';
+import { SignupUserBody, LoginUserBody, PatchUserBody } from './schemas';
 import {
   createUser,
   getAllUsers,
@@ -10,16 +10,18 @@ import {
   verifyUser,
 } from './user.service';
 
-const createUserHandler = async (
-  request: FastifyRequest<{ Body: CreateUserBody }>,
+const signUpHandler = async (
+  request: FastifyRequest<{ Body: SignupUserBody }>,
   reply: FastifyReply,
 ) => {
-  const { body } = request;
+  const { body, jwt } = request;
 
   try {
-    const newUser = await createUser(body);
+    const createdUser = await createUser(body);
+    const verifiedUser = await verifyUser({ email: body.email, password: body.password });
 
-    reply.code(201).send(newUser);
+    const accessToken = jwt.sign(verifiedUser!);
+    reply.code(201).send({ ...createdUser, accessToken });
   } catch (error) {
     if (error.code === 11000) {
       throw new Error('This email is not available');
@@ -85,7 +87,7 @@ const updateSelfHandler = async (request: FastifyRequest<{ Body: PatchUserBody }
 };
 
 export {
-  createUserHandler,
+  signUpHandler,
   loginUserHandler,
   getAllUsersHandler,
   removeSelfHandler,
