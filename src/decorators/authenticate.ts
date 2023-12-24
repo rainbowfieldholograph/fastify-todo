@@ -1,7 +1,8 @@
+import { jwtAuthDecoratorName } from 'config';
 import { User } from 'database/models/user';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
-async function authenticate(request: FastifyRequest, reply: FastifyReply) {
+export async function authenticate(request: FastifyRequest, reply: FastifyReply) {
   try {
     await request.jwtVerify<User>();
   } catch (error) {
@@ -15,4 +16,8 @@ declare module 'fastify' {
   }
 }
 
-export { authenticate };
+declare module 'fastify' {
+  interface FastifyRequest {
+    [jwtAuthDecoratorName]?: User;
+  }
+}

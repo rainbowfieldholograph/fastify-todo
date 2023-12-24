@@ -14,30 +14,32 @@ import {
   serializerCompiler,
   ZodTypeProvider,
 } from 'fastify-type-provider-zod';
+import { jwtAuthDecoratorName } from 'config';
 
 export const buildServer = async (options = {}) => {
   initConfig();
 
-  const fastifyServer = fastify(options);
+  const app = fastify(options);
 
-  fastifyServer.setValidatorCompiler(validatorCompiler);
-  fastifyServer.setSerializerCompiler(serializerCompiler);
-  fastifyServer.withTypeProvider<ZodTypeProvider>();
-
-  await connectDatabase(fastifyServer);
+  app.setValidatorCompiler(validatorCompiler);
+  app.setSerializerCompiler(serializerCompiler);
+  app.withTypeProvider<ZodTypeProvider>();
 
   const { JWT_SECRET, CLIENT_URL } = process.env;
 
-  fastifyServer.register(todoRoutes, { prefix: '/todo' });
-  fastifyServer.register(userRoutes, { prefix: '/user' });
-  fastifyServer.register(healthCheckRoute);
-  fastifyServer.register(jwt, { secret: JWT_SECRET! });
-  fastifyServer.register(cors, { origin: CLIENT_URL! });
+  await connectDatabase(app);
 
-  fastifyServer.decorate('authenticate', authenticate);
+  app.register(todoRoutes, { prefix: '/todo' });
+  app.register(userRoutes, { prefix: '/user' });
+  app.register(healthCheckRoute);
 
-  fastifyServer.addHook('preHandler', jwtAuth);
-  fastifyServer.addHook('onClose', closeDb);
+  app.register(jwt, { secret: JWT_SECRET!, decoratorName: jwtAuthDecoratorName });
+  app.register(cors, { origin: CLIENT_URL! });
 
-  return fastifyServer;
+  app.decorate('authenticate', authenticate);
+
+  app.addHook('preHandler', jwtAuth);
+  app.addHook('onClose', closeDb);
+
+  return app;
 };

@@ -1,123 +1,91 @@
-import { User } from 'database/models/user';
-import { FastifyReply, FastifyRequest } from 'fastify';
+import { RouteHandler } from 'fastify';
 import {
   GetAllTodosQuerystring,
   PatchTodoBody,
   PatchTodoParams,
   PostTodo,
 } from './schemas';
-import {
-  createTodo,
-  getAllTodo,
-  getTodoById,
-  getUserTodos,
-  removeTodo,
-  updateTodo,
-} from './todo.service';
+import * as service from './todo.service';
+import createHttpError from 'http-errors';
 
-const _getAllTodoHandler = async (_request: FastifyRequest, _reply: FastifyReply) => {
-  const result = await getAllTodo();
+// const _getAllTodo: RouteHandler = async () => {
+//   const result = await service.getAllTodo();
+//   if (result.length === 0) throw new Error('No documents found');
 
-  if (result.length === 0) throw new Error('No documents found');
+//   return result;
+// };
 
-  return result;
-};
+export const getTodoById: RouteHandler<{
+  Params: { id: string };
+}> = async (request, reply) => {
+  const { currentUser, params } = request;
+  if (!currentUser) return reply.send(createHttpError.Unauthorized());
 
-const getTodoByIdHandler = async (
-  request: FastifyRequest<{ Params: { id: string } }>,
-) => {
-  const { id } = request.params;
-  const user = request.user as User;
-
-  const foundTodo = await getTodoById(id);
-  const userId = user._id.toString();
-
-  if (!foundTodo) throw new Error('Invalid value');
+  const foundTodo = await service.getTodoById(params.id);
+  const userId = currentUser._id.toString();
+  if (!foundTodo) return reply.send(createHttpError.NotFound('Todo not found'));
 
   const creatorId = foundTodo.creatorId.toString();
-
-  if (userId !== creatorId) throw new Error('No access');
+  if (userId !== creatorId) return reply.send(createHttpError.Forbidden('No access'));
 
   return foundTodo;
 };
 
-const createTodoHandler = async (request: FastifyRequest<{ Body: PostTodo }>) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { body, user } = request as any;
+export const createTodo: RouteHandler<{ Body: PostTodo }> = async (request, reply) => {
+  const { body, currentUser } = request;
 
-  const candidate = { ...body, completed: false, creatorId: user._id };
-  const createdUser = await createTodo(candidate);
+  if (!currentUser) return reply.send(createHttpError.Unauthorized());
+
+  const candidate = { ...body, completed: false, creatorId: currentUser._id };
+  const createdUser = await service.createTodo(candidate);
 
   return createdUser;
 };
 
-const removeTodoHandler = async (request: FastifyRequest<{ Params: { id: string } }>) => {
-  try {
-    const { id } = request.params;
-    const user = request.user as User;
+export const removeTodo: RouteHandler<{ Params: { id: string } }> = async (
+  request,
+  reply,
+) => {
+  const { id } = request.params;
 
-    if (request.raw.aborted) {
-      throw new Error('Aborted');
-    }
+  const todoToRemove = await service.removeTodo(id);
+  if (!todoToRemove) return reply.send(createHttpError.NotFound('Todo not found'));
 
-    const todoToDelete = await getTodoById(id);
-    if (!todoToDelete) throw new Error('Invalid value');
-
-    const userId = user._id.toString();
-    const creatorId = todoToDelete.creatorId.toString();
-
-    if (userId !== creatorId) {
-      throw new Error('No access');
-    }
-
-    const todoToRemove = await removeTodo(id);
-
-    return todoToRemove;
-  } catch (error) {
-    console.error(error);
-    throw new Error(error.message);
-  }
+  return todoToRemove;
 };
 
-const updateTodoHandler = async (
-  request: FastifyRequest<{ Params: PatchTodoParams; Body: PatchTodoBody }>,
-) => {
-  const { body, params } = request;
+export const updateTodo: RouteHandler<{
+  Params: PatchTodoParams;
+  Body: PatchTodoBody;
+}> = async (request, reply) => {
+  const { body, params, currentUser } = request;
   const { id } = params;
-  const user = request.user as User;
 
-  const todoToUpdate = await getTodoById(id);
+  const todoToUpdate = await service.getTodoById(id);
+  if (!todoToUpdate) return reply.send(createHttpError.NotFound('Todo not found'));
 
-  if (!todoToUpdate) throw new Error('Not found');
-
-  const userId = user._id.toString();
+  const userId = currentUser?._id.toString();
   const creatorId = todoToUpdate.creatorId.toString();
 
-  if (userId !== creatorId) throw new Error('No access');
+  if (userId !== creatorId) return reply.send(createHttpError.Forbidden('No access'));
 
-  const updated = await updateTodo(id, body);
+  const updated = await service.updateTodo(id, body);
   return updated;
 };
 
-const getUserTodosHandler = async (
-  request: FastifyRequest<{ Querystring: GetAllTodosQuerystring }>,
+export const getUserTodos: RouteHandler<{ Querystring: GetAllTodosQuerystring }> = async (
+  request,
+  reply,
 ) => {
-  const user = request.user as User;
   const { sortBy, sortType } = request.query;
+  const { currentUser } = request;
 
-  const requestParams = { userId: user._id.toString() };
+  if (!currentUser) return reply.send(createHttpError.Unauthorized());
+  const requestParams = { userId: currentUser._id.toString() };
   if (sortBy && sortType) {
     Object.defineProperty(requestParams, 'sort', { value: { sortBy, sortType } });
   }
 
-  const todos = await getUserTodos(requestParams);
+  const todos = await service.getUserTodos(requestParams);
   return todos;
-};
-
-export {
-  createTodoHandler,
-  getTodoByIdHandler,
-  removeTodoHandler,
-  updateTodoHandler,
-  getUserTodosHandler,
 };

@@ -6,55 +6,21 @@ import {
   getAllTodosSchema,
 } from './schemas';
 import {
-  createTodoHandler,
-  getTodoByIdHandler,
-  getUserTodosHandler,
-  removeTodoHandler,
-  updateTodoHandler,
+  createTodo,
+  getTodoById,
+  getUserTodos,
+  removeTodo,
+  updateTodo,
 } from './todo.controller';
 
-const todoRoutes: FastifyPluginAsync = async (server, _options) => {
-  server.addHook('onRequest', server.authenticate); // validate authentication
-
-  server.route({
-    url: '/',
-    method: 'GET',
-    schema: getAllTodosSchema,
-    handler: getUserTodosHandler,
-  });
-
-  server.route({
-    url: '/:id',
-    method: 'GET',
-    handler: getTodoByIdHandler,
-  });
-
-  server.route({
-    url: '/',
-    method: 'POST',
-    schema: postTodoSchema,
-    handler: createTodoHandler,
-  });
-
-  server.route({
-    url: '/:id',
-    method: 'DELETE',
-    handler: removeTodoHandler,
-  });
-
-  server.route({
-    url: '/:id',
-    method: 'PATCH',
-    schema: patchTodoSchema,
-    handler: updateTodoHandler,
-  });
-
-  server.route({
-    url: '/:id',
-    method: 'PUT',
-    schema: putTodoSchema,
-    handler: updateTodoHandler,
-  });
+const todoRoutes: FastifyPluginAsync = async (app, _options) => {
+  app.addHook('onRequest', app.authenticate); // validate authentication
+  app.get('/', { schema: getAllTodosSchema }, getUserTodos);
+  app.get('/:id', getTodoById);
+  app.post('/', { schema: postTodoSchema }, createTodo);
+  app.delete('/:id', removeTodo);
+  app.patch('/:id', { schema: patchTodoSchema }, updateTodo);
+  app.put('/:id', { schema: putTodoSchema }, updateTodo);
 };
 
 export { todoRoutes };

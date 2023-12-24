@@ -2,12 +2,12 @@ import { FastifyPluginAsync } from 'fastify';
 import { signUpSchema, loginUserSchema } from './schemas';
 import { patchUserSchema } from './schemas/patch-user.schema';
 import {
-  signUpHandler,
-  getAllUsersHandler,
-  getUserHandler,
-  loginUserHandler,
-  removeSelfHandler,
-  updateSelfHandler,
+  signUp,
+  getAllUsers,
+  getUser,
+  login,
+  removeSelf,
+  updateSelf,
 } from './user.controller';
 
 const userRoutes: FastifyPluginAsync = async (server) => {
@@ -15,35 +15,35 @@ const userRoutes: FastifyPluginAsync = async (server) => {
     method: 'POST',
     url: '/login',
     schema: loginUserSchema,
-    handler: loginUserHandler,
+    handler: login,
   });
 
   server.route({
     method: 'POST',
     url: '/sign-up',
     schema: signUpSchema,
-    handler: signUpHandler,
+    handler: signUp,
   });
 
   server.route({
     method: 'GET',
     url: '/',
     preHandler: [server.authenticate],
-    handler: getAllUsersHandler,
+    handler: getAllUsers,
   });
 
   server.route({
     method: 'GET',
     url: '/me',
     preHandler: [server.authenticate],
-    handler: getUserHandler,
+    handler: getUser,
   });
 
   server.route({
     method: 'DELETE',
     url: '/me',
     preHandler: [server.authenticate],
-    handler: removeSelfHandler,
+    handler: removeSelf,
   });
 
   server.route({
@@ -51,7 +51,7 @@ const userRoutes: FastifyPluginAsync = async (server) => {
     url: '/me',
     preHandler: [server.authenticate],
     schema: patchUserSchema,
-    handler: updateSelfHandler,
+    handler: updateSelf,
   });
 };
 

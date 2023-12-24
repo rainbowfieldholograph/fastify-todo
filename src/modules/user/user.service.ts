@@ -19,7 +19,7 @@ const verifyUser = async (
   return userWithoutPassword;
 };
 
-const createUser = async (input: CreateUserInput): Promise<Omit<User, 'password'>> => {
+const createUser = async (input: CreateUserInput) => {
   const newUser = await new UserModel(input).save();
   const createdUser = newUser.toObject();
 
