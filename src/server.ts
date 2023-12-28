@@ -1,9 +1,9 @@
 import fastify from 'fastify';
 import jwt from '@fastify/jwt';
 import cors from '@fastify/cors';
-import { todoRoutes } from 'modules/todo/todo.route';
-import { healthCheckRoute } from 'modules/health-check/health-check.route';
-import { userRoutes } from 'modules/user/user.route';
+import { todoRoutes } from 'modules/todo/route';
+import { healthCheckRoute } from 'modules/health-check/route';
+import { userRoutes } from 'modules/user/route';
 import { initConfig } from 'utils/init-config';
 import { jwtAuth } from 'hooks/jwt-auth';
 import { authenticate } from 'decorators/authenticate';

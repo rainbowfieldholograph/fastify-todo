@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { descriptionSchema, titleSchema } from './todo.schema';
+import { descriptionSchema, titleSchema } from './todo';
 
 const postTodoBodySchema = z.object({
   title: titleSchema,

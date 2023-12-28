@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from 'fastify';
 import { signUpSchema, loginUserSchema } from './schemas';
-import { patchUserSchema } from './schemas/patch-user.schema';
+import { patchUserSchema } from './schemas/patch-user';
 import {
   signUp,
   getAllUsers,
@@ -8,7 +8,7 @@ import {
   login,
   removeSelf,
   updateSelf,
-} from './user.controller';
+} from './controller';
 
 const userRoutes: FastifyPluginAsync = async (server) => {
   server.route({

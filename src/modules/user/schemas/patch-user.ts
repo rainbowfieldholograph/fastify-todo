@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { emailSchema, passwordSchema, usernameSchema } from './user.schema';
+import { emailSchema, passwordSchema, usernameSchema } from './user';
 
 const patchUserBodySchema = z.object({
   email: emailSchema.optional(),

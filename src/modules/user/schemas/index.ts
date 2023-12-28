@@ -1,3 +1,3 @@
-export * from './create-user.schema';
-export * from './login-user.schema';
-export * from './patch-user.schema';
+export * from './create-user';
+export * from './login-user';
+export * from './patch-user';

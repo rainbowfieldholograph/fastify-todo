@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { emailSchema, passwordSchema } from './user.schema';
+import { emailSchema, passwordSchema } from './user';
 
 const loginUserBodySchema = z.object({
   email: emailSchema,

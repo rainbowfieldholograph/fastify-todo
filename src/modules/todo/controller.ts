@@ -5,7 +5,7 @@ import {
   PatchTodoParams,
   PostTodo,
 } from './schemas';
-import * as service from './todo.service';
+import * as service from './service';
 import createHttpError from 'http-errors';
 
 // const _getAllTodo: RouteHandler = async () => {

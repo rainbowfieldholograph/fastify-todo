@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { sortFields, sortTypes } from '../todo.constant';
+import { sortFields, sortTypes } from '../config';
 
 const getAllTodosSchemaQuerystring = z
   .object({

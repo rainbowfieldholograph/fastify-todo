@@ -11,7 +11,7 @@ import {
   getUserTodos,
   removeTodo,
   updateTodo,
-} from './todo.controller';
+} from './controller';
 
 const todoRoutes: FastifyPluginAsync = async (app, _options) => {
   app.addHook('onRequest', app.authenticate); // validate authentication

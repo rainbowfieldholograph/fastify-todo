@@ -1,7 +1,5 @@
 const getStatus = async () => {
-  return {
-    status: 'OK',
-  };
+  return { status: 'OK' };
 };
 
 export { getStatus };

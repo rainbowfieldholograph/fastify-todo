@@ -1,6 +1,6 @@
 import { Todo, TodoModel } from 'database/models/todo';
 import { Types } from 'mongoose';
-import { TodoSortFields, TodoSortTypes } from './todo.constant';
+import { TodoSortFields, TodoSortTypes } from './config';
 
 type CreateTodoInput = Pick<Todo, 'description' | 'title'>;
 type UpdateTodoInput = Partial<Pick<Todo, 'completed' | 'description' | 'title'>>;

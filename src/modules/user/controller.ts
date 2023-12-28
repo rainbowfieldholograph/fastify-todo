@@ -1,6 +1,6 @@
 import { RouteHandler } from 'fastify';
 import { SignupUserBody, LoginUserBody, PatchUserBody } from './schemas';
-import * as service from './user.service';
+import * as service from './service';
 import createHttpError from 'http-errors';
 
 export const signUp: RouteHandler<{ Body: SignupUserBody }> = async (request, reply) => {

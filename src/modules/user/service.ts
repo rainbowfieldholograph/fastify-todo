@@ -1,5 +1,5 @@
 import { User, UserModel } from 'database/models/user';
-import { USER_RETURN_FIELDS } from './user.constants';
+import { USER_RETURN_FIELDS } from './config';
 
 type CreateUserInput = Pick<User, 'email' | 'password' | 'username'>;
 type UpdateUserInput = Partial<Pick<User, 'password' | 'email' | 'username'>>;
