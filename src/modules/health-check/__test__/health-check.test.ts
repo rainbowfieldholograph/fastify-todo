@@ -1,5 +1,5 @@
 import { test } from 'tap';
-import { buildServer } from 'server';
+import { buildServer } from '../../../server';
 
 test('request the /healthcheck route', async (t) => {
   const server = await buildServer();

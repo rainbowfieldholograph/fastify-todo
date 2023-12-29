@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import mongoose from 'mongoose';
 
-const connectDatabase = async (server: FastifyInstance) => {
+export const connectDatabase = async (server: FastifyInstance) => {
   mongoose.connection.on('connected', () => {
     server.log.info('MongoDB connected');
   });
@@ -14,5 +14,3 @@ const connectDatabase = async (server: FastifyInstance) => {
 
   await mongoose.connect(dbUrl!);
 };
-
-export { connectDatabase };

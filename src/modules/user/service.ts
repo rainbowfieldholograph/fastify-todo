@@ -1,4 +1,4 @@
-import { User, UserModel } from 'database/models/user';
+import { User, UserModel } from '../../database/models/user';
 import { USER_RETURN_FIELDS } from './config';
 
 type CreateUserInput = Pick<User, 'email' | 'password' | 'username'>;

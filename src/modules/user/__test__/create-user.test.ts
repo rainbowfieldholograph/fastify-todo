@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { test } from 'tap';
-import { buildServer } from 'server';
+import { buildServer } from '../../../server';
 
 test('create user logic test', async (t) => {
   t.test('should create user successfully', async (t) => {

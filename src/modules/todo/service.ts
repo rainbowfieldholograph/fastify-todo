@@ -1,4 +1,4 @@
-import { Todo, TodoModel } from 'database/models/todo';
+import { Todo, TodoModel } from '../../database/models/todo';
 import { Types } from 'mongoose';
 import { TodoSortFields, TodoSortTypes } from './config';
 

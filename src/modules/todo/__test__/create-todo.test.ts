@@ -1,4 +1,4 @@
-import { buildServer } from 'server';
+import { buildServer } from '../../../server';
 import { test } from 'tap';
 import { faker } from '@faker-js/faker';
 

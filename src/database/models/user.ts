@@ -1,6 +1,6 @@
-import { SchemaType } from 'database/schema-type';
+import { SchemaType } from '../schema-type';
 import { Schema, model } from 'mongoose';
-import { USER_COLLECTION } from '../constants';
+import { USER_COLLECTION } from '../config';
 
 const userSchema = new Schema({
   email: {

@@ -1,4 +1,0 @@
-const TODO_COLLECTION = 'Todo';
-const USER_COLLECTION = 'User';
-
-export { TODO_COLLECTION, USER_COLLECTION };

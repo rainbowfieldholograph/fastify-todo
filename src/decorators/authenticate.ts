@@ -1,6 +1,6 @@
-import { jwtAuthDecoratorName } from 'config';
-import { User } from 'database/models/user';
 import { FastifyReply, FastifyRequest } from 'fastify';
+import { jwtAuthDecoratorName } from '../config';
+import { User } from '../database/models/user';
 
 export async function authenticate(request: FastifyRequest, reply: FastifyReply) {
   try {

@@ -1,6 +1,3 @@
-import { FastifyPluginAsync } from 'fastify';
-import { signUpSchema, loginUserSchema } from './schemas';
-import { patchUserSchema } from './schemas/patch-user';
 import {
   signUp,
   getAllUsers,
@@ -9,50 +6,22 @@ import {
   removeSelf,
   updateSelf,
 } from './controller';
+import { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox';
+import * as schemas from './schemas';
 
-const userRoutes: FastifyPluginAsync = async (server) => {
-  server.route({
-    method: 'POST',
-    url: '/login',
-    schema: loginUserSchema,
-    handler: login,
-  });
+const protectedRoutes: FastifyPluginAsyncTypebox = async (server) => {
+  server.addHook('onRequest', server.authenticate);
 
-  server.route({
-    method: 'POST',
-    url: '/sign-up',
-    schema: signUpSchema,
-    handler: signUp,
-  });
+  server.get('/', getAllUsers);
+  server.get('/me', getUser);
+  server.delete('/me', removeSelf);
+  server.patch('/me', updateSelf);
+};
 
-  server.route({
-    method: 'GET',
-    url: '/',
-    preHandler: [server.authenticate],
-    handler: getAllUsers,
-  });
-
-  server.route({
-    method: 'GET',
-    url: '/me',
-    preHandler: [server.authenticate],
-    handler: getUser,
-  });
-
-  server.route({
-    method: 'DELETE',
-    url: '/me',
-    preHandler: [server.authenticate],
-    handler: removeSelf,
-  });
-
-  server.route({
-    method: 'PATCH',
-    url: '/me',
-    preHandler: [server.authenticate],
-    schema: patchUserSchema,
-    handler: updateSelf,
-  });
+const userRoutes: FastifyPluginAsyncTypebox = async (server) => {
+  server.post('/login', { schema: { body: schemas.loginUserBody } }, login);
+  server.post('/sign-up', { schema: { body: schemas.signUpUserBody } }, signUp);
+  server.register(protectedRoutes);
 };
 
 export { userRoutes };

@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prebuild": "rimraf ./dist",
     "build": "tsc",
-    "dev": "cross-env NODE_PATH=./ NODE_ENV=dev nodemon src/app.ts",
-    "start": "cross-env NODE_PATH=./ NODE_ENV=prod ts-node src/app.ts",
-    "test": "cross-env NODE_PATH=./ NODE_ENV=test tap --node-arg=--require=ts-node/register --reporter=list --watch",
+    "dev": "npm run build && cross-env NODE_PATH=./ NODE_ENV=dev node ./dist/app.js",
+    "start": "npm run build && cross-env NODE_PATH=./ NODE_ENV=prod node ./dist/app.js",
+    "test": "cross-env NODE_PATH=./ NODE_ENV=test tap run",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
     "lint:check": "eslint --ext js,ts,.tsx,.jsx .",
@@ -19,13 +20,13 @@
   "dependencies": {
     "@fastify/cors": "^8.5.0",
     "@fastify/jwt": "^7.2.4",
+    "@fastify/type-provider-typebox": "^3.5.0",
+    "@sinclair/typebox": "^0.31.28",
     "dotenv": "16.0.3",
     "fastify": "^4.25.1",
     "fastify-plugin": "^4.5.1",
-    "fastify-type-provider-zod": "1.1.9",
     "http-errors": "^2.0.0",
-    "mongoose": "7.0.1",
-    "zod": "^3.22.4"
+    "mongoose": "7.0.1"
   },
   "devDependencies": {
     "@faker-js/faker": "7.6.0",
@@ -40,12 +41,14 @@
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prettier": "^5.1.1",
-    "nodemon": "^3.0.2",
+    "fastify-tsconfig": "^2.0.0",
     "pino-pretty": "9.4.0",
     "prettier": "^3.1.1",
+    "rimraf": "^5.0.5",
     "tap": "^18.6.1",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=20.10"
   }
 }

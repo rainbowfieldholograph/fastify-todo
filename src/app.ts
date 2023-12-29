@@ -1,12 +1,10 @@
-import { buildServer } from 'server';
+import { buildServer } from './server';
 
 const start = async () => {
   const server = await buildServer({
     logger: {
       level: 'info',
-      transport: {
-        target: 'pino-pretty',
-      },
+      transport: { target: 'pino-pretty' },
     },
   });
 

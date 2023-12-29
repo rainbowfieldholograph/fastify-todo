@@ -1,7 +1,7 @@
 import { test } from 'tap';
-import { buildServer } from 'server';
+import { buildServer } from '../../../server';
 import { faker } from '@faker-js/faker';
-import { User, UserModel } from 'database/models/user';
+import { User, UserModel } from '../../../database/models/user';
 
 test('user login logic test', async () => {
   test('should login user successfully', async (t) => {

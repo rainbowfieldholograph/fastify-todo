@@ -1,12 +1,8 @@
-import { RouteHandler } from 'fastify';
-import {
-  GetAllTodosQuerystring,
-  PatchTodoBody,
-  PatchTodoParams,
-  PostTodo,
-} from './schemas';
-import * as service from './service';
+import { FastifyReply, FastifyRequest } from 'fastify';
 import createHttpError from 'http-errors';
+import { Static } from '@sinclair/typebox';
+import * as schemas from './schemas';
+import * as service from './service';
 
 // const _getAllTodo: RouteHandler = async () => {
 //   const result = await service.getAllTodo();
@@ -15,9 +11,10 @@ import createHttpError from 'http-errors';
 //   return result;
 // };
 
-export const getTodoById: RouteHandler<{
-  Params: { id: string };
-}> = async (request, reply) => {
+export const getTodoById = async (
+  request: FastifyRequest<{ Params: Static<typeof schemas.getTodoParams> }>,
+  reply: FastifyReply,
+) => {
   const { currentUser, params } = request;
   if (!currentUser) return reply.send(createHttpError.Unauthorized());
 
@@ -31,7 +28,10 @@ export const getTodoById: RouteHandler<{
   return foundTodo;
 };
 
-export const createTodo: RouteHandler<{ Body: PostTodo }> = async (request, reply) => {
+export const createTodo = async (
+  request: FastifyRequest<{ Body: Static<typeof schemas.postTodoBody> }>,
+  reply: FastifyReply,
+) => {
   const { body, currentUser } = request;
 
   if (!currentUser) return reply.send(createHttpError.Unauthorized());
@@ -42,9 +42,9 @@ export const createTodo: RouteHandler<{ Body: PostTodo }> = async (request, repl
   return createdUser;
 };
 
-export const removeTodo: RouteHandler<{ Params: { id: string } }> = async (
-  request,
-  reply,
+export const removeTodo = async (
+  request: FastifyRequest<{ Params: Static<typeof schemas.removeTodoParams> }>,
+  reply: FastifyReply,
 ) => {
   const { id } = request.params;
 
@@ -54,10 +54,13 @@ export const removeTodo: RouteHandler<{ Params: { id: string } }> = async (
   return todoToRemove;
 };
 
-export const updateTodo: RouteHandler<{
-  Params: PatchTodoParams;
-  Body: PatchTodoBody;
-}> = async (request, reply) => {
+export const updateTodo = async (
+  request: FastifyRequest<{
+    Body: Static<typeof schemas.patchTodoBody>;
+    Params: Static<typeof schemas.patchTodoParams>;
+  }>,
+  reply: FastifyReply,
+) => {
   const { body, params, currentUser } = request;
   const { id } = params;
 
@@ -73,9 +76,11 @@ export const updateTodo: RouteHandler<{
   return updated;
 };
 
-export const getUserTodos: RouteHandler<{ Querystring: GetAllTodosQuerystring }> = async (
-  request,
-  reply,
+export const getUserTodos = async (
+  request: FastifyRequest<{
+    Querystring: Static<typeof schemas.getAllTodosQuerystring>;
+  }>,
+  reply: FastifyReply,
 ) => {
   const { sortBy, sortType } = request.query;
   const { currentUser } = request;

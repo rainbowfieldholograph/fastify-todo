@@ -1,9 +1,13 @@
-import { RouteHandler } from 'fastify';
-import { SignupUserBody, LoginUserBody, PatchUserBody } from './schemas';
+import { FastifyReply, FastifyRequest } from 'fastify';
 import * as service from './service';
+import * as schemas from './schemas';
 import createHttpError from 'http-errors';
+import { Static } from '@sinclair/typebox';
 
-export const signUp: RouteHandler<{ Body: SignupUserBody }> = async (request, reply) => {
+export const signUp = async (
+  request: FastifyRequest<{ Body: Static<typeof schemas.signUpUserBody> }>,
+  reply: FastifyReply,
+) => {
   const { body, jwt } = request;
 
   try {
@@ -24,7 +28,10 @@ export const signUp: RouteHandler<{ Body: SignupUserBody }> = async (request, re
   }
 };
 
-export const login: RouteHandler<{ Body: LoginUserBody }> = async (request, reply) => {
+export const login = async (
+  request: FastifyRequest<{ Body: Static<typeof schemas.loginUserBody> }>,
+  reply: FastifyReply,
+) => {
   const { jwt, body } = request;
   const { email, password } = body;
 
@@ -35,15 +42,15 @@ export const login: RouteHandler<{ Body: LoginUserBody }> = async (request, repl
   return { accessToken };
 };
 
-export const getAllUsers: RouteHandler = async (_request, _reply) => {
+export const getAllUsers = async (_request: FastifyRequest, _reply: FastifyReply) => {
   const users = await service.getAllUsers();
 
   return users;
 };
 
-export const getUser: RouteHandler = async (request, reply) => {
+export const getUser = async (request: FastifyRequest, reply: FastifyReply) => {
   const { currentUser } = request;
-  if (!currentUser) return createHttpError.Unauthorized();
+  if (!currentUser) return reply.send(createHttpError.Unauthorized());
 
   const foundUser = await service.getUser(currentUser._id.toString());
   if (!foundUser) return reply.send(createHttpError.NotFound('User not found'));
@@ -51,7 +58,7 @@ export const getUser: RouteHandler = async (request, reply) => {
   return foundUser;
 };
 
-export const removeSelf: RouteHandler = async (request, reply) => {
+export const removeSelf = async (request: FastifyRequest, reply: FastifyReply) => {
   const { currentUser } = request;
   if (!currentUser) return reply.send(createHttpError.Unauthorized());
 
@@ -61,14 +68,14 @@ export const removeSelf: RouteHandler = async (request, reply) => {
   return removedUser;
 };
 
-export const updateSelf: RouteHandler<{ Body: PatchUserBody }> = async (
-  request,
-  reply,
+export const updateSelf = async (
+  request: FastifyRequest<{ Body: Static<typeof schemas.patchUserBody> }>,
+  reply: FastifyReply,
 ) => {
   const { body, currentUser } = request;
   if (!currentUser) return reply.send(createHttpError.Unauthorized());
 
-  const updatedUser = service.updateUser(currentUser._id.toString(), body);
+  const updatedUser = await service.updateUser(currentUser._id.toString(), body);
   if (!updatedUser) return reply.send(createHttpError.NotFound('User not found'));
 
   return updatedUser;

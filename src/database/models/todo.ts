@@ -1,6 +1,6 @@
-import { SchemaType } from 'database/schema-type';
+import { SchemaType } from '../schema-type';
 import { Schema, model, Types } from 'mongoose';
-import { TODO_COLLECTION, USER_COLLECTION } from '../constants';
+import { TODO_COLLECTION, USER_COLLECTION } from '../config';
 
 const todoSchema = new Schema({
   creatorId: {
